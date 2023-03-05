@@ -4,6 +4,10 @@ import pytest
 
 from predictive_coding.pe_layer_config import PELayerConfig, PEParams
 from predictive_coding.predictive_coding_network import PredictiveCodingNetwork
+from tests.common import (
+    matrix_main_diagonal,
+    matrix_sub_diagonal,
+)
 
 
 @pytest.fixture
@@ -108,23 +112,12 @@ def test_construction(network: PredictiveCodingNetwork) -> None:
 
 
 def test_learn_diagonals(network: PredictiveCodingNetwork) -> None:
-    inputs = np.array(
-        [
-            [
-                [1, 0, 0, 0, 0],
-                [0, 1, 0, 0, 0],
-                [0, 0, 1, 0, 0],
-                [0, 0, 0, 1, 0],
-                [0, 0, 0, 0, 1],
-            ],
-            [
-                [0, 0, 0, 0, 1],
-                [0, 0, 0, 1, 0],
-                [0, 0, 1, 0, 0],
-                [0, 1, 0, 0, 0],
-                [1, 0, 0, 0, 0],
-            ],
-        ]
+    inputs = np.stack(
+        (
+            matrix_main_diagonal(5),
+            matrix_sub_diagonal(5),
+        ),
+        axis=0,
     ).reshape(2, 25)
 
     for _ in range(100):

@@ -4,6 +4,12 @@ import pytest
 
 from predictive_coding.pe_params import PEParams
 from predictive_coding.predictive_estimator import PredictiveEstimator
+from tests.common import (
+    matrix_main_diagonal,
+    matrix_sub_diagonal,
+    matrix_horizontal_bar,
+    matrix_vertical_bar,
+)
 
 
 def test_construction(basic_pe) -> None:
@@ -118,37 +124,14 @@ def test_four_bars() -> None:
         sigma_sq_hl=1.0,
     )
 
-    inputs = np.array(
-        [
-            [
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-                [1, 1, 1, 1, 1],
-                [0, 0, 0, 0, 0],
-                [0, 0, 0, 0, 0],
-            ],
-            [
-                [1, 0, 0, 0, 0],
-                [0, 1, 0, 0, 0],
-                [0, 0, 1, 0, 0],
-                [0, 0, 0, 1, 0],
-                [0, 0, 0, 0, 1],
-            ],
-            [
-                [0, 0, 1, 0, 0],
-                [0, 0, 1, 0, 0],
-                [0, 0, 1, 0, 0],
-                [0, 0, 1, 0, 0],
-                [0, 0, 1, 0, 0],
-            ],
-            [
-                [0, 0, 0, 0, 1],
-                [0, 0, 0, 1, 0],
-                [0, 0, 1, 0, 0],
-                [0, 1, 0, 0, 0],
-                [1, 0, 0, 0, 0],
-            ],
-        ]
+    inputs = np.stack(
+        (
+            matrix_horizontal_bar(5),
+            matrix_main_diagonal(5),
+            matrix_vertical_bar(5),
+            matrix_sub_diagonal(5),
+        ),
+        axis=0,
     ).reshape(4, 25)
 
     preds = pe.predict()
@@ -245,23 +228,12 @@ def test_learn_diagonals() -> None:
         sigma_sq_hl=1.0,
     )
 
-    inputs = np.array(
-        [
-            [
-                [1, 0, 0, 0, 0],
-                [0, 1, 0, 0, 0],
-                [0, 0, 1, 0, 0],
-                [0, 0, 0, 1, 0],
-                [0, 0, 0, 0, 1],
-            ],
-            [
-                [0, 0, 0, 0, 1],
-                [0, 0, 0, 1, 0],
-                [0, 0, 1, 0, 0],
-                [0, 1, 0, 0, 0],
-                [1, 0, 0, 0, 0],
-            ],
-        ]
+    inputs = np.stack(
+        (
+            matrix_main_diagonal(5),
+            matrix_sub_diagonal(5),
+        ),
+        axis=0,
     )
 
     for _ in range(100):
@@ -304,15 +276,7 @@ def test_with_pred_hl() -> None:
         sigma_sq_hl=1.0,
     )
 
-    inputs = np.array(
-        [
-            [1, 0, 0, 0, 0],
-            [0, 1, 0, 0, 0],
-            [0, 0, 1, 0, 0],
-            [0, 0, 0, 1, 0],
-            [0, 0, 0, 0, 1],
-        ]
-    ).reshape(1, 25)
+    inputs = matrix_main_diagonal(5).reshape(1, 25)
 
     preds_hl = np.full((1, 10), 1)
 

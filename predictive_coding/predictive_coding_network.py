@@ -67,3 +67,19 @@ class PredictiveCodingNetwork:
             layer_errors = np.array(next_layer_errors).transpose((1, 0, -1))
             network_errors.append(layer_errors)
         return network_errors
+
+
+    def train(self, *, inputs: np.ndarray, iterations: int) -> None:
+        self.reset_representation()
+        for _ in range(iterations):
+            self.perceive(training=True, inputs=inputs)
+
+    def reset_representation(self) -> None:
+        for layer in self.layers:
+            for estimator in layer:
+                estimator.reset_representation()
+
+    def decay_learning_rate(self) -> None:
+        for layer in self.layers:
+            for estimator in layer:
+                estimator.decay_learning_rate()

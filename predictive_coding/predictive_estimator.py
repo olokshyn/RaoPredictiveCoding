@@ -14,6 +14,7 @@ class PredictiveEstimator:
     ) -> None:
         self.input_size = input_size
         self.repr_size = repr_size
+        self.params = params
         self.k1 = params.k1
         self.k2 = params.k2
         self.sigma_sq = params.sigma_sq
@@ -68,3 +69,14 @@ class PredictiveEstimator:
 
     def predict(self) -> np.ndarray:
         return np.dot(self.memory, self.repr)
+
+    def reset_representation(self) -> None:
+        self.repr = np.zeros_like(self.repr)
+
+    def decay_learning_rate(self):
+        self.k1 /= self.params.k1_decay
+        self.k2 /= self.params.k2_decay
+
+    def reset_learning_rate(self):
+        self.k1 = self.params.k1
+        self.k2 = self.params.k2
