@@ -22,10 +22,10 @@ class PredictiveEstimator:
         self.alpha = params.alpha
         self.lambd = params.lambd
 
-        self.memory = np.random.normal(
-            params.memory_loc,
-            params.memory_scale,
-            size=(*self.input_size, self.repr_size),
+        self.memory = np.random.uniform(
+            low=params.memory_uniform_low,
+            high=params.memory_uniform_high,
+            size=(*self.input_size, self.repr_size)
         )
         self.repr = np.zeros(self.repr_size)
 

@@ -26,7 +26,7 @@ def load_and_process_batch(
     dir_path: str, config: ProcessConfig = ProcessConfig()
 ) -> np.ndarray:
     images = []
-    for image_name in os.listdir(dir_path):
+    for image_name in sorted(os.listdir(dir_path)):
         image_path = os.path.join(dir_path, image_name)
         image = load_image(image_path)
         image = process_image(image, config)
@@ -54,9 +54,15 @@ def process_image(
     )
     for patch_vertical in range(patches_vertical):
         for patch_horizontal in range(patches_horizontal):
-            y = (patch_vertical * config.patch_height, (patch_vertical + 1) * config.patch_height)
-            x = (patch_horizontal * config.patch_width, (patch_horizontal + 1) * config.patch_width)
-            patch = image[y[0]:y[1], x[0]:x[1]]
+            y = (
+                patch_vertical * config.patch_height,
+                (patch_vertical + 1) * config.patch_height,
+            )
+            x = (
+                patch_horizontal * config.patch_width,
+                (patch_horizontal + 1) * config.patch_width,
+            )
+            patch = image[y[0] : y[1], x[0] : x[1]]
             patched_image[patch_vertical, patch_horizontal] = patch
     return patched_image
 
@@ -104,11 +110,21 @@ def patch_iterator(
         for patch_horizontal in range(patches_horizontal):
             patch = patched_image[patch_vertical][patch_horizontal]
             if window_step[0] > 0:
-                horizontal_shifts = (patch.shape[1] - window_size[0]) // window_step[0] + 1
+                # fmt: off
+                horizontal_shifts = (
+                    (patch.shape[1] - window_size[0])
+                    // window_step[0] + 1
+                )
+                # fmt: on
             else:
                 horizontal_shifts = 1
             if window_step[1] > 0:
-                vertical_shifts = (patch.shape[0] - window_size[1]) // window_step[1] + 1
+                # fmt: off
+                vertical_shifts = (
+                    (patch.shape[0] - window_size[1])
+                    // window_step[1] + 1
+                )
+                # fmt: on
             else:
                 vertical_shifts = 1
             inputs = np.zeros(

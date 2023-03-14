@@ -68,7 +68,6 @@ class PredictiveCodingNetwork:
             network_errors.append(layer_errors)
         return network_errors
 
-
     def train(self, *, inputs: np.ndarray, iterations: int) -> None:
         self.reset_representation()
         for _ in range(iterations):
@@ -83,3 +82,11 @@ class PredictiveCodingNetwork:
         for layer in self.layers:
             for estimator in layer:
                 estimator.decay_learning_rate()
+
+    @property
+    def Us(self) -> np.ndarray:
+        return np.concatenate([x.memory for x in self.layers[0]], axis=0)
+
+    @property
+    def Uh(self) -> np.ndarray:
+        return self.layers[1][0].memory

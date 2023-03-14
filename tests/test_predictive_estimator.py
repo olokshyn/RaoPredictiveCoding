@@ -17,8 +17,8 @@ def test_construction(basic_pe) -> None:
         input_size=(4, 50),
         repr_size=15,
         params=PEParams(
-            memory_loc=2.5,
-            memory_scale=0.001,
+            memory_uniform_low=0.2,
+            memory_uniform_high=0.3,
             k1=0.0005,
             k2=0.005,
             sigma_sq=1.5,
@@ -38,8 +38,6 @@ def test_construction(basic_pe) -> None:
     assert pe.repr.shape == (15,)
     assert np.allclose(pe.repr, 0)
     assert pe.memory.shape == (4, 50, 15)
-    assert pe.memory.mean() == pytest.approx(2.5, abs=1e-3)
-    assert pe.memory.std() == pytest.approx(0.001, abs=1e-3)
 
 
 @pytest.fixture
@@ -48,8 +46,8 @@ def basic_pe() -> PredictiveEstimator:
         input_size=(2, 10),
         repr_size=3,
         params=PEParams(
-            memory_loc=0.5,
-            memory_scale=0.0,
+            memory_uniform_low=0.5,
+            memory_uniform_high=0.5,
             k1=0.0005,
             k2=0.005,
             sigma_sq=1.0,
@@ -113,8 +111,8 @@ def test_four_bars() -> None:
         input_size=(4, 25),
         repr_size=10,
         params=PEParams(
-            memory_loc=1,
-            memory_scale=0.0,
+            memory_uniform_low=1.0,
+            memory_uniform_high=1.0,
             k1=0.0005,
             k2=0.05,
             sigma_sq=1.0,
@@ -217,8 +215,8 @@ def test_learn_diagonals() -> None:
         input_size=(1, 25),
         repr_size=10,
         params=PEParams(
-            memory_loc=1,
-            memory_scale=0.0,
+            memory_uniform_low=1.0,
+            memory_uniform_high=1.0,
             k1=0.0005,
             k2=0.05,
             sigma_sq=1.0,
@@ -265,8 +263,8 @@ def test_with_pred_hl() -> None:
         input_size=(1, 25),
         repr_size=10,
         params=PEParams(
-            memory_loc=1,
-            memory_scale=0.0,
+            memory_uniform_low=1.0,
+            memory_uniform_high=1.0,
             k1=0.0005,
             k2=0.05,
             sigma_sq=1.0,
